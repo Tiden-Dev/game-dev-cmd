@@ -1,5 +1,7 @@
 package ue
 
+const ConfigDir = "Config"
+
 type IniSection string
 
 func (i IniSection) String() string {

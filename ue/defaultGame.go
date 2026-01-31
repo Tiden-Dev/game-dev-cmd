@@ -2,6 +2,8 @@ package ue
 
 import "gopkg.in/ini.v1"
 
+const DefaultGameIniFileName = "DefaultGame.ini"
+
 const (
 	GeneralProjectSettings IniSection = "/Script/EngineSettings.GeneralProjectSettings"
 )

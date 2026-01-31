@@ -2,7 +2,9 @@ package ue
 
 import (
 	"encoding/json"
+	"errors"
 	"os"
+	"strings"
 )
 
 // UProject represents the structure of an Unreal Engine .uproject file
@@ -36,6 +38,22 @@ type PluginDescriptor struct {
 	// Optional target filters (rare)
 	TargetAllowList []string `json:"TargetAllowList,omitempty"`
 	TargetDenyList  []string `json:"TargetDenyList,omitempty"`
+}
+
+func FindUProject() (string, error) {
+	entries, err := os.ReadDir(".")
+	if err != nil {
+		return "", err
+	}
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		if strings.HasSuffix(entry.Name(), ".uproject") {
+			return entry.Name(), nil
+		}
+	}
+	return "", errors.New("no .uproject found")
 }
 
 func ReadUProject(filePath string) (*UProject, error) {

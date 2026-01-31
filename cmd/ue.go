@@ -4,7 +4,9 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/manifoldco/promptui"
+	"path"
+
+	"github.com/Tiden-Dev/game-dev-cmd/ue"
 	"github.com/spf13/cobra"
 )
 
@@ -14,16 +16,26 @@ var ueCmd = &cobra.Command{
 	Short: "A set to commands for Unreal Engine",
 	Long:  `A set to commands for Unreal Engine`,
 	Run: func(cmd *cobra.Command, args []string) {
-		p := promptui.Prompt{
-			Label:     "Do you want to disable global illumination?",
-			IsConfirm: true,
-		}
-		result, err := p.Run()
+		fp, err := ue.FindUProject()
 		if err != nil {
-			logger.Error().Err(err).Msg("Failed to disable global illumination")
+			logger.Fatal().Err(err).Msg("no unreal project in the working directory")
 			return
 		}
-		logger.Info().Msg(result)
+		project, err := ue.ReadUProject(fp)
+		if err != nil {
+			logger.Fatal().Err(err).Msg("failed to read project file")
+			return
+		}
+
+		fp = path.Join(ue.ConfigDir, ue.DefaultGameIniFileName)
+		defaultGame, err := ue.LoadDefaultGame(fp, ue.EngineVersion(project.EngineAssociation))
+		if err != nil {
+			logger.Error().Err(err).Msg("failed to load default game")
+			return
+		}
+
+		name, _ := defaultGame.GetProjectName()
+		logger.Info().Str("name", name).Str("engine", project.EngineAssociation).Msg("unreal project found!")
 	},
 }
 
