@@ -4,6 +4,7 @@ Copyright © 2026 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"os"
 	"path"
 
 	"github.com/Tiden-Dev/game-dev-cmd/ue"
@@ -19,19 +20,19 @@ var ueCmd = &cobra.Command{
 		fp, err := ue.FindUProject()
 		if err != nil {
 			logger.Fatal().Err(err).Msg("no unreal project in the working directory")
-			return
+			os.Exit(1)
 		}
 		project, err := ue.ReadUProject(fp)
 		if err != nil {
 			logger.Fatal().Err(err).Msg("failed to read project file")
-			return
+			os.Exit(1)
 		}
 
 		fp = path.Join(ue.ConfigDir, ue.DefaultGameIniFileName)
 		defaultGame, err := ue.LoadDefaultGame(fp, ue.EngineVersion(project.EngineAssociation))
 		if err != nil {
 			logger.Error().Err(err).Msg("failed to load default game")
-			return
+			os.Exit(1)
 		}
 
 		name, _ := defaultGame.GetProjectName()
