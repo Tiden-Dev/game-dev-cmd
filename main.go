@@ -1,7 +1,7 @@
 package main
 
 import (
-	"game-dev-cmd/cmd"
+	"github.com/Tiden-Dev/game-dev-cmd/cmd"
 )
 
 func main() {
