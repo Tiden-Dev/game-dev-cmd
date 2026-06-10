@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"os"
-	"path"
+	"path/filepath"
 
 	"github.com/Tiden-Dev/game-dev-cmd/ue"
 	"github.com/spf13/cobra"
@@ -28,7 +28,7 @@ var ueCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		fp = path.Join(ue.ConfigDir, ue.DefaultGameIniFileName)
+		fp = filepath.Join(ue.ConfigDir, ue.DefaultGameIniFileName)
 		defaultGame, err := ue.LoadDefaultGame(fp, ue.EngineVersion(project.EngineAssociation))
 		if err != nil {
 			logger.Error().Err(err).Msg("failed to load default game")
